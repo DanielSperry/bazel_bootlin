@@ -41,9 +41,38 @@ register_toolchains(
 
 ### Available Toolchains
 
-Currently `bazel_bootlin` only provides toolchains listed in
+Currently `bazel_bootlin` only provides simplifyied registration for the toolchains listed in
 [toolchain/toolchain_info.bzl]. This list is easily expanded so feel free to add
-more as necessary.
+more as necessary. However it's possible to configure unsupported toolchains manually by passing extra parameters to the `bootlin_toolchain` rule, like in the example below:
+
+```Starlark
+bootlin_toolchain(
+    name = "gcc_12_3",
+    architecture = "x86-64",
+    libc_impl = "glibc",
+    buildroot_version = "stable-2023.08-1",
+    sha256 = "d6eca7f1ea736ef6f868a027a9d0baa875f9513755026aed2badc04a2b9cd7bd",
+    gcc_version ="12.3.0",
+    libc_version = "glibc_2.35",
+)
+
+bootlin_toolchain(
+    name = "riscv64_gcc",
+    architecture = "riscv64-lp64d",
+    libc_impl = "glibc",
+    buildroot_version = "stable-2023.08-1",
+    sha256 = "97d7f95ced5852e3fa0119fd5370356df0b652844a76ad9a1c88caa8dd09f367",
+    gcc_version ="12.3.0",
+    libc_version = "glibc_2.37",
+)
+
+```
+
+* `sha256` refers to the SHA256 hash of the toolchain archive.
+* `gcc_version` refers to the GCC version string (e.g. `12.3.0`).
+* `libc_version` refers to the libc version string (e.g. `glibc_2.35`).
+
+These values can be found on the [Bootlin toolchains](https://toolchains.bootlin.com/) page.
 
 ### Building With Bootlin Toolchains
 
