@@ -13,14 +13,15 @@ def cc_toolchain_config(
         toolchain_files_workspace,
         bazel_output_base,
         extra_cxx_flags,
-        extra_link_flags):
+        extra_link_flags,
+        gcc_version,
+        libc_version):
     target_arch_lower = target_arch.replace("-", "_")
     buildroot = "{}-buildroot-linux-gnu".format(
         target_arch_lower,
     )
-    info = TOOLCHAIN_INFO[identifier]
-    gcc_version = info["gcc_version"]
-    libc_version = info["libc_version"]
+    gcc_version = gcc_version or TOOLCHAIN_INFO[identifier]["gcc_version"]
+    libc_version = libc_version or TOOLCHAIN_INFO[identifier]["libc_version"]
 
     # https://bazel.build/versions/6.0.0/rules/lib/cc_common#create_cc_toolchain_config_info
     host_system_name = "{}-linux".format(target_arch_lower)

@@ -80,6 +80,8 @@ fi
             "{buildroot_version}": buildroot_version,
             "{extra_cxx_flags}": as_string(rctx.attr.extra_cxx_flags),
             "{extra_link_flags}": as_string(rctx.attr.extra_link_flags),
+            "{gcc_version}": rctx.attr.gcc_version or TOOLCHAIN_INFO[rctx.attr.identifier]["gcc_version"],
+            "{libc_version}": rctx.attr.libc_version or TOOLCHAIN_INFO[rctx.attr.identifier]["libc_version"],
         },
     )
 
@@ -117,6 +119,18 @@ _bootlin_toolchain = repository_rule(
             default = [],
             doc = "Additional flags used for link actions.",
         ),
+        "sha256" : attr.string(
+            default = "",
+            doc = "SHA256 of the toolchain archive. Can be omitted if the toolchain is known by bazel_bootlin.",
+        ),
+        "gcc_version" : attr.string(
+            default = "",
+            doc = "gcc version. Can be omitted if the toolchain is known by bazel_bootlin.",
+        ),
+        "libc_version" : attr.string(
+            default = "",
+            doc = "libc version. Can be omitted if the toolchain is known by bazel_bootlin.",
+        ),
     },
     local = True,
     configure = True,
@@ -126,7 +140,8 @@ _bootlin_toolchain = repository_rule(
 def bootlin_toolchain(**kwargs):
     # Handle microarchitecture suffixes.
     microarch = kwargs["architecture"]
-    macroarch = "x86-64" if microarch.startswith("x86-64") else microarch
+    macroarch = "x86-64" if microarch.startswith("x86-64") else microarch.split('-')[0]
+    sha256 = kwargs.get("sha256", None)
 
     identifier = "--".join([
         microarch,
@@ -159,7 +174,7 @@ echo '    visibility = ["//visibility:public"],' >> {arch}-buildroot-linux-gnu/s
 echo ')' >> {arch}-buildroot-linux-gnu/sysroot/BUILD.bazel
 """.format(arch = macroarch.replace("-", "_")),
         ],
-        sha256 = TOOLCHAIN_INFO[identifier]["sha256"],
+        sha256 = sha256 or TOOLCHAIN_INFO[identifier]["sha256"],
         strip_prefix = identifier,
     )
 

@@ -20,6 +20,8 @@ cc_toolchain_config(
     bazel_output_base = "{bazel_output_base}",
     extra_cxx_flags = {extra_cxx_flags},
     extra_link_flags = {extra_link_flags},
+    gcc_version = "{gcc_version}",
+    libc_version = "{libc_version}",
 )
 
 cc_toolchain(
