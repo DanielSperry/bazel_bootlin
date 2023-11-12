@@ -1,0 +1,6 @@
+# enables the toolchain resolution logic.
+build --incompatible_enable_cc_toolchain_resolution
+# ensures the local toolchain is not used.
+build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+# defines the platform to be used
+build --platforms=//platforms:riscv64_linux

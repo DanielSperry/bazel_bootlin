@@ -1,0 +1,25 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# replace this rule with the version from the web using the http_archive rule 
+# as described in the repository's readme file [../../README.md]
+local_repository(
+   name = "bazel_bootlin",
+   path = "../../",
+)
+
+load("@bazel_bootlin//:defs.bzl", "bootlin_toolchain")
+
+bootlin_toolchain(
+    name = "riscv64_gcc",
+    architecture = "riscv64-lp64d",
+    libc_impl = "glibc",
+    buildroot_version = "stable-2023.08-1",
+    sha256 = "97d7f95ced5852e3fa0119fd5370356df0b652844a76ad9a1c88caa8dd09f367",
+    gcc_version ="12.3.0",
+    libc_version = "glibc_2.37",
+)
+
+register_toolchains(
+    "@riscv64_gcc//:toolchain",
+)
+
